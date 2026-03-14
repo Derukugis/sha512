@@ -2,5 +2,8 @@
 name = "sha512"
 version = "1.1.0"
 edition = "2024"
+license = "MIT"
 
 [dependencies]
+
+
