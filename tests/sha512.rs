@@ -1,6 +1,4 @@
-#![no_std]
-
-use sha512::sha512;
+use sha512::{sha512_into, PaddedMessage};
 
 #[cfg(test)] 
 mod tests {
@@ -23,6 +21,12 @@ mod tests {
             output[i] = ((td(hi) << 4) | td(lo)) as u8;
         }
     }
+
+    fn sha512(bytes: &[u8]) -> [u8; 64] {
+        let pl = PaddedMessage::pad_len(bytes.len());
+        let mut pad = vec![0u8; pl];
+        sha512_into(bytes, &mut pad)
+    }
    
     #[test]
     fn hex_string_to_bytes() {
@@ -38,6 +42,14 @@ mod tests {
         let result = sha512("The quick brown fox jumps over the lazy dog".as_bytes());
         let mut expected = [0u8; 64];
         htb("07e547d9586f6a73f73fbac0435ed76951218fb7d0c8d788a309d785436bbb642e93a252a954f23912547d1e8a3b5ed6e1bfd7097821233fa0538f3db854fee6", &mut expected);
+        assert_eq!(&result[..], &expected[..]); 
+    }
+
+    #[test]
+    fn long_string() {
+        let result = sha512("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut in venenatis arcu, a lobortis turpis. Aliquam auctor sagittis magna, id dignissim turpis ullamcorper nec. Aenean justo risus, rutrum vel faucibus a, ultrices vitae arcu. Aliquam erat volutpat. Nam non ipsum eros. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vestibulum est leo, eleifend eu efficitur eget, auctor et dui. Proin suscipit mi nec quam tincidunt, eget auctor metus semper. Etiam ut justo enim. Aliquam vel vehicula odio. Integer viverra venenatis pharetra. Nam vestibulum interdum urna vel fringilla. Aliquam eget ex enim. Praesent sagittis rutrum neque, vitae consectetur ante fermentum congue. Cras laoreet risus a orci maximus tempor. Praesent laoreet finibus euismod. Vivamus vel nibh lacus. Mauris commodo dolor sed quam posuere, et posuere lorem cursus. Nullam laoreet lobortis risus, sit amet pretium velit sodales vitae. Praesent et gravida nulla. Fusce id leo nunc. Maecenas consequat metus eu dolor posuere, id sagittis leo semper. Morbi consequat luctus eros eget porta. Quisque mauris sem, convallis porta quam sed, convallis molestie tellus. Nullam porta, felis ac consequat convallis, purus mauris cursus lectus, nec suscipit purus felis vel turpis. Fusce imperdiet velit sit amet libero egestas, eu egestas augue vestibulum. Suspendisse luctus purus in vestibulum blandit. Proin aliquet pulvinar est, quis dignissim massa. Etiam volutpat elit eget tincidunt tempus. Aenean accumsan metus nulla, quis mollis nisl elementum malesuada. In lacinia massa eget metus rhoncus, pulvinar condimentum ligula sagittis. Nullam eu luctus velit, eget condimentum leo. Donec in suscipit sem, in mollis mauris. Quisque eleifend aliquam varius. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Morbi venenatis, turpis in tincidunt fermentum, lorem magna faucibus nulla, non elementum augue lorem at urna. Nulla fringilla leo et tempor rutrum. Donec id sem felis. Nulla accumsan purus a nisl non.".as_bytes());
+        let mut expected = [0u8; 64];
+        htb("2e88448d7062ba9b1188b40f25d34ab787ad2772cfc2ebe540dba4f67042f8c602d5878133b206d379c0bce50fe6d3197e2b3cf10f24d9cc26dfd73b228e3408", &mut expected);
         assert_eq!(&result[..], &expected[..]); 
     }
 
