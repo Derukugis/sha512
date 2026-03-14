@@ -1,7 +1,6 @@
-#![no_std]
-
 //https://en.wikipedia.org/wiki/SHA-2
 
+#![no_std]
 #![allow(non_snake_case)]
 #![allow(non_upper_case_globals)]
 
