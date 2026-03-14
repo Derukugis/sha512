@@ -2,18 +2,6 @@
 
 //https://en.wikipedia.org/wiki/SHA-2
 
-/*
-the message is broken into 1024-bit chunks,
-the initial hash values and round constants are extended to 64 bits,
-there are 80 rounds instead of 64,
-the message schedule array w has 80 64-bit words instead of 64 32-bit words,
-to extend the message schedule array w, the loop is from 16 to 79 instead of from 16 to 63,
-the round constants are based on the first 80 primes 2..409,
-the word size used for calculations is 64 bits long,
-the appended length of the message (before pre-processing), in bits, is a 128-bit big-endian integer, and
-the shift and rotate amounts used are different.
-*/
-
 #![allow(non_snake_case)]
 #![allow(non_upper_case_globals)]
 
@@ -224,19 +212,4 @@ mod tests {
         );
         assert_eq!(&result[..], &expected[..]);
     }
-    #[test]
-    fn sha512_speed_test() {
-        let data = b"hello";
-        let iterations = 1000000;
-
-        for _ in 0..iterations {
-            let _ = sha512(data);
-        }
-
-        // keep the test passing
-        assert!(true);
-    }
-    
-    
-    
 }
